@@ -65,6 +65,7 @@ struct link* tempLink;
     }
     free(list);
   }
+  return;
 }
 
 /*
@@ -127,36 +128,26 @@ void list_insert(struct list* list, void* val) {
  *     Otherwise, it should return a non-zero value.
  */
 void list_remove(struct list* list, void* val, int (*cmp)(void* a, void* b)) {
-  struct link* tempLink;
-  struct link* currLink;
-
-  tempLink = list->head;
-
-  if(cmp(val, tempLink->val) == 0)
-  {
-    list->head = tempLink->next;
-    free(tempLink);
-
-    return;
-  }
-  else
-  {
-    currLink = tempLink;
-
-    while(currLink->next != NULL)
-    {
-
-      if(cmp(val, currLink->next->val) == 0)
-      {
-        tempLink = currLink->next->next;
-        free(currLink->next);
-        currLink->next = tempLink;
+  struct link* curr = list->head;
+  struct link* prev = list->head;
+  struct link* next = curr-> next;
+  // We are comparing two pointers to see if the first instance of val param
+  // is indentical to a link's value. If these two pointers are equal to zero,
+  // we have found our remove link. This is *if* the head pointer points toward a 
+  // value identical to what we need to find. 
+    while(prev->next != NULL) {
+      if(cmp(prev->next->val, val) == 0) {
+        curr = prev->next->next;
+        free(prev->next);
+        prev->next = curr;
       }
-      currLink = currLink->next;
+
+    // Update the holder pointer to the next pointer
+      prev = prev->next;
     }
-  }
-  return;
-}
+  }   
+  
+
 
 
 /*
@@ -205,7 +196,8 @@ void list_remove(struct list* list, void* val, int (*cmp)(void* a, void* b)) {
  */
 int list_position(struct list* list, void* val, int (*cmp)(void* a, void* b)) {
   int index = 0;
-  for(struct link * link = list->head; link ;link = link -> next)
+  for(struct link * link = list->head;
+              link ;link = link -> next)
   {
     if(*(int*)(link->val)==*(int*)(val))
   {
