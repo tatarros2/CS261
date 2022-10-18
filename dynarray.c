@@ -37,8 +37,9 @@ struct dynarray {
 struct dynarray* dynarray_create() {
 
  struct dynarray*da=malloc(sizeof(struct dynarray));
-  da->data=malloc(2*sizeof(void*));
-  da->capacity=2;
+  da->capacity =2;
+  da->data=malloc(sizeof(void*)*2);
+  da->size=0;
   return da;
 }
 
@@ -81,16 +82,16 @@ int dynarray_size(struct dynarray* da)
  *     which means that a pointer of any type can be passed.
  */
 void dynarray_insert(struct dynarray* da, void* val) {
-
-
-  if(da->size == da->capacity){
+  if(da -> size == da->capacity){
+     da->capacity *= 2;
     void** temp=malloc(2*da->capacity*sizeof(void*));
     for(int i=0; i< da -> size;i++){
       temp[i]= da->data[i];
     }
     free(da->data);
-  da->data = temp;}
-    da->size=da->size+1;
+  da->data = temp;
+  }
+  da->size++;
   da->data[da->size-1] = val;
   return;
 }
