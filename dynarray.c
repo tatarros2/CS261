@@ -36,10 +36,10 @@ struct dynarray {
  */
 struct dynarray* dynarray_create() {
 
- struct dynarray*array=malloc(sizeof(struct dynarray));
- array->data=malloc(2*sizeof(void*));
- array->capacity=2;
-  return array;
+ struct dynarray*da=malloc(sizeof(struct dynarray));
+  da->data=malloc(2*sizeof(void*));
+  da->capacity=2;
+  return da;
 }
 
 /*
@@ -82,15 +82,17 @@ int dynarray_size(struct dynarray* da)
  */
 void dynarray_insert(struct dynarray* da, void* val) {
 
-  da->size=da->size+1;
-  if(da->size >= da->capacity){
-    void**temp=malloc(2*da->capacity*sizeof(void*));
+
+  if(da->size == da->capacity){
+    void** temp=malloc(2*da->capacity*sizeof(void*));
     for(int i=0; i< da -> size;i++){
       temp[i]= da->data[i];
     }
     free(da->data);
   da->data = temp;}
+    da->size=da->size+1;
   da->data[da->size-1] = val;
+  return;
 }
 
 /*
@@ -114,7 +116,7 @@ void dynarray_remove(struct dynarray* da, int idx) {
     idx = idx+1;
 
   }
-  da -> size = da-> size +1;
+  da -> size = da-> size -1;
 }
 
 /*
